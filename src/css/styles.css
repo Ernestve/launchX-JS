@@ -26,10 +26,10 @@
   height: 70vh;
   width: 85%;
   background: rgb(71, 1, 1);
-  transform: translateY(-5vh);
+  transform: translateY(-4vh);
 }
 #l2 {
-  clip-path: polygon(56% 0, 100% 0, 100% 100%, 0 100%, 0 10%, 36% 10%);
+  clip-path: polygon(45% 0, 100% 0, 100% 100%, 0 100%, 0 5%, 35% 5%);
   height: 65vh;
   width: 96%;
   background: rgb(143, 5, 5);
@@ -232,4 +232,16 @@
   transform: translate(8%, 20%);
   border-style: solid;
   border-width: 8px;
+}
+
+.screen2_box {
+  display: flex;
+  justify-content: center;
+  margin: 16px 80px;
+  border-color: transparent transparent black transparent;
+  border-style: solid;
+}
+
+.screen2_box-h4 {
+  margin: 8px 24px;
 }

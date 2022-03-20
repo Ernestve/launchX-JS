@@ -4,7 +4,7 @@ function getPokemon(id) {
   return data;
 }
 function getPokemons() {
-  const apiUrl = "https://pokeapi.co/api/v2/pokemon";
+  const apiUrl = "https://pokeapi.co/api/v2/pokemon?limit=151";
   const data = fetch(apiUrl).then((response) => response.json());
   return data;
 }
@@ -15,6 +15,17 @@ function getGeneration(id) {
   return data;
 }
 
+function capitalize(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+let listOfPokemon = [];
+getPokemons().then((data) => {
+  data.results.forEach((pokemon) => {
+    listOfPokemon.push(pokemon.name);
+  });
+});
+
 function populatePokemonFromAPI(id) {
   const imageControl = document.getElementById("pokemonImg");
   const nameControl = document.getElementById("nameInfo");
@@ -24,12 +35,15 @@ function populatePokemonFromAPI(id) {
   const typesContainer2 = document.getElementById("typeInfo2");
   const abilitiesContainer1 = document.getElementById("pokemonData1");
   const abilitiesContainer2 = document.getElementById("pokemonData2");
+  const xpControl = document.getElementById("xpInfo");
+  const heightControl = document.getElementById("heightInfo");
+  const weightControl = document.getElementById("weightInfo");
 
   getPokemon(id).then((pokemon) => {
     // Image
     imageControl.src = pokemon.sprites.front_default;
     // Name
-    setTextChild(nameControl, pokemon.name);
+    setTextChild(nameControl, capitalize(pokemon.name));
     // Pokedex number
     setTextChild(pokedexNumberControl, pokemon.order + "#" ?? "#");
     // Generation
@@ -51,6 +65,12 @@ function populatePokemonFromAPI(id) {
       pokemon.abilities[1].ability.name,
       "pokemonData2"
     );
+    // XP
+    setTextChild(xpControl, pokemon.base_experience);
+    // Height
+    setTextChild(heightControl, pokemon.height);
+    // Weight
+    setTextChild(weightControl, pokemon.weight);
   });
 }
 
@@ -63,11 +83,14 @@ function populatePokemonFromData(pokemon) {
   const typesContainer2 = document.getElementById("typeInfo2");
   const abilitiesContainer1 = document.getElementById("pokemonData1");
   const abilitiesContainer2 = document.getElementById("pokemonData2");
+  const xpControl = document.getElementById("xpInfo");
+  const heightControl = document.getElementById("heightInfo");
+  const weightControl = document.getElementById("weightInfo");
 
   // Image
   imageControl.src = pokemon.sprites.front_default;
   // Name
-  setTextChild(nameControl, pokemon.name);
+  setTextChild(nameControl, capitalize(pokemon.name));
   // Pokedex number
   setTextChild(pokedexNumberControl, pokemon.order + "#" ?? "#");
   // Generation
@@ -89,6 +112,12 @@ function populatePokemonFromData(pokemon) {
     pokemon.abilities[1].ability.name,
     "pokemonData2"
   );
+  // XP
+  setTextChild(xpControl, pokemon.base_experience);
+  // Height
+  setTextChild(heightControl, pokemon.height);
+  // Weight
+  setTextChild(weightControl, pokemon.weight);
 }
 
 function setTextChild(parentComponent, text, replace = true) {
@@ -134,18 +163,16 @@ function prevPokemon() {
 
 //Pendiente de hacer
 function searchPokemon() {
-  const searchInputControl = document.getElementById("searchTxt");
-  const search = searchInputControl.value;
-  getPokemons().then((pokemons) => {
-    const pokemon = pokemons.results.filter(
-      (pokemon) => pokemon.name === search
-    );
-    if (pokemon) {
-      populatePokemonFromData(getPokemon(pokemon[0].name));
-    } else {
-      alert("Pokemon not found");
-    }
+  const searchInput = document.getElementById("searchTxt");
+  const searchValue = searchInput.value;
+  const searchResult = listOfPokemon.filter((pokemon) => {
+    return pokemon.includes(searchValue.toLowerCase());
   });
+  if (searchResult.length > 0) {
+    populatePokemonFromAPI(searchResult[0]);
+  } else {
+    alert("There is no pokemon with that name");
+  }
 }
 
 let currentPokemonId = 1;
